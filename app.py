@@ -33,7 +33,7 @@ question_form = QuestionForm()
 question_form.append(overview)
 
 
-def addComment(text):
+def add_comment(text):
     qc1 = QuestionContent()
     qc1.append(FormattedContent(text))
     fta1 = SelectionAnswer(min=1, max=1, style='dropdown', selections=ratings,
@@ -91,7 +91,7 @@ for c in courses:
     question_form = QuestionForm()
     question_form.append(overview)
     for com in c['comments']:
-        addComment(filter_comment(com, c['instructors'], c['course']))
+        add_comment(filter_comment(com, c['instructors'], c['course']))
     mtc.create_hit(questions=question_form,
                    max_assignments=5,
                    title=title,
