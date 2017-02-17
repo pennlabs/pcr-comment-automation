@@ -1,6 +1,6 @@
+import re
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import QuestionContent, Question, QuestionForm, Overview, AnswerSpecification, SelectionAnswer, FormattedContent
-import re
 
 ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
 SECRET_KEY = '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'
