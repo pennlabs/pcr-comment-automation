@@ -1,0 +1,32 @@
+<Question>
+  <QuestionIdentifier>  </QuestionIdentifier>
+  <DisplayName>  </DisplayName>
+  <IsRequired> true </IsRequired>
+  <QuestionContent>
+    <Text>
+    </Text>
+  </QuestionContent>
+  <AnswerSpecification>
+    <SelectionAnswer>
+      <StyleSuggestion>radiobutton</StyleSuggestion>
+      <Selections>
+        <Selection>
+          <SelectionIdentifier>
+            approve
+          </SelectionIdentifier>
+          <Text>
+            Approve
+          </Text>
+        </Selection>
+        <Selection>
+          <SelectionIdentifier>
+            disapprove
+          </SelectionIdentifier>
+          <Text>
+            Disapprove
+          </Text>
+        </Selection>
+      </Selections>
+    </SelectionAnswer>
+  </AnswerSpecification>
+</Question>

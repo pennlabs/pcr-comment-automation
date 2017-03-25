@@ -1,6 +1,8 @@
 # PCR Comment Automation
 
 Using Amazon Mechanical Turk to review course comments. 
+To use, first run "pip install boto" then "python app.py"
+
 
 ## TODO
 
@@ -16,3 +18,4 @@ Using Amazon Mechanical Turk to review course comments.
 10. Create a few more stupid dummy questions (during testing)
 11. Replace stupid dummy questions with many smart dummy questions (after testing)
 12. Clean up worker-view instructions
+
