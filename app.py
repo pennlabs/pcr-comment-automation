@@ -3,6 +3,8 @@ import boto3
 import datetime
 import math
 import random
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import tostring
 
 ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
 SECRET_KEY = 'JlbzfVmMrhvVDYHViqDnKHBbVKPzhEBjUPI7euFa'
@@ -26,28 +28,25 @@ DUMMY_QUESTIONS = [{"question": "dummy-approve", "answer": "approve"}, {"questio
 
 REJECT_MESSAGE = "You failed to provide a correct response to one or more questions. Sorry for the inconvenience. We hope to work with you again in the future."
 
-courses = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}, {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
+courses = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
+            {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
 
 
-overview = "<Overview>"
-overview = overview + '<Title>Censor vulgar, overly harsh, irrelevant, or unconstructive college course comments.</Title>'
-overview = overview + '<Text>Here we are some examples of what we are looking for: 1. This professor was a jerk. F*** this class. -> Disapprove (Vulgar) 2. This was the worst class. -> Disapprove (Unconstructive)  3. This was an amazing class. -> Approve  4. I truly did not enjoy this class. The professor was too fast and the homework was unrelated to exams. XXXXXX is too hard and way too boring. I strongly advise against this class. -> Approve (strongly negative, but reserved)</Text>'
+def add_comment(text, qid):
 
-overview = overview + "</Overview>"
+    tree = ET.parse('comment.xml')
 
-def add_comment(text, id, question_form):
-    qc1 = "<Question><QuestionIdentifier>" + id + "</QuestionIdentifier>"
-    qc1 = qc1 + "<DisplayName>" + "Question1" + "</DisplayName>" 
-    qc1 = qc1 + "<IsRequired>true</IsRequired>"
-    qc1 = qc1 + "<QuestionContent><Text>" + text  + "</Text></QuestionContent>"
-    qc1 = qc1 + "<AnswerSpecification>"
-    qc1 = qc1 + "<SelectionAnswer><StyleSuggestion>radiobutton</StyleSuggestion>"
-    qc1 = qc1 + "<Selections>"
-    qc1 = qc1 + "<Selection><SelectionIdentifier>approve</SelectionIdentifier><Text>Approve</Text></Selection>"
-    qc1 = qc1 + "<Selection><SelectionIdentifier>disapprove</SelectionIdentifier><Text>Disapprove</Text></Selection>"
-    qc1 = qc1 + "</Selections></SelectionAnswer></AnswerSpecification></Question>"
-    question_form = question_form + qc1
-    return question_form
+    qID = tree.find('QuestionIdentifier')
+    qID.text = qid
+
+    dispName = tree.find('DisplayName')
+    dispName.text = qid
+
+    txt = tree.find('QuestionContent')
+    txt[0].text = text
+
+    root = tree.getroot()
+    return root
 
 def filter_comment(comment, professors, course):
     to_filter = WORDS_TO_FILTER
@@ -63,42 +62,63 @@ def filter_comment(comment, professors, course):
             comment = ignore_case.sub("".join(['X' for c in name]), comment)
     return comment
 
-for c in courses:
-    num_of_dummy_questions = int(math.ceil(0.1*len(c["comments"])))
-    dummy_question_ids = random.sample(range(1, len(c["comments"]) + num_of_dummy_questions + 1), num_of_dummy_questions)
-    dummy_question_ref = random.sample(range(1, len(DUMMY_QUESTIONS)), num_of_dummy_questions)
-    id_to_question = {}
-    for d in range(0, len(dummy_question_ids)):
-        id_to_question[str(dummy_question_ids[d])] = dummy_question_ref[d]
-    
-    reviewPolicy = {
-        "PolicyName": "ScoreMyKnownAnswers/2011-09-01",
-        "Parameters": [
-            {"Key": "ApproveIfKnownAnswerScoreIsAtLeast", "Values": [str(num_of_dummy_questions)]},
-            {"Key": "RejectIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
-            {"Key": "ExtendIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
-            {"Key": "RejectReason", "Values": [REJECT_MESSAGE]},
-            {"Key": "AnswerKey", "MapEntries": [{"Key": "Question" + str(i), "Values": [DUMMY_QUESTIONS[id_to_question[str(i)]]["answer"]]} for i in dummy_question_ids]}
-        ]
-    }
- 
-    question_form = "<QuestionForm xmlns='" + XML_TEMPLATE  + "'>" + overview
-    dummies_issued = 0
-    for i in range(0, len(c["comments"]) + num_of_dummy_questions):
-        if i+1 in dummy_question_ids:
-            dummy_question = DUMMY_QUESTIONS[id_to_question[str(i+1)]]["question"]
-            question_form = add_comment(dummy_question, "Question"+str(i+1), question_form)
-            dummies_issued = dummies_issued + 1
-        else:
-            question_form = add_comment(filter_comment(c["comments"][i - dummies_issued], c['instructors'], c['course']), "Question"+str(i+1), question_form)
-    
-    question_form = question_form + "</QuestionForm>"
-    mtc.create_hit(Question=question_form,
-                   MaxAssignments=1,
-                   Title=TITLE,
-                   Description=DESCRIPTION,
-                   Keywords=KEYWORDS,
-                   AssignmentDurationInSeconds=90*(len(c["comments"])),
-                   LifetimeInSeconds=SECONDS_TO_EXPIRE,
-                   AssignmentReviewPolicy=reviewPolicy,
-                   Reward="1")
+def remove_vulgar_comments(comment):
+    swearwords = [ "arse", "ass", "asshole", "bastard", "bitch", "bollocks", "child-fucker", "crap", "cunt",
+                    "damn", "damm", "fuck", "fucker", "fucking", "godamm", "goddam", "goddamm", "godamn", "goddamn",
+                    "hell", "motherfucker", "nigga", "nigger", "shit", "shitass", "twat"]
+
+def generateHitRequest():
+    filter_comment(c["comments"], c['instructors'], c['course'])
+
+    for c in courses:
+        qtree = ET.parse('questionform.xml')
+        qroot = qtree.getroot()
+        qroot.set('xmlns', XML_TEMPLATE)
+
+        ovTree = ET.parse('overview.xml')
+        ovRoot = ovTree.getroot()
+        qroot.append(ovRoot);
+
+        num_of_dummy_questions = int(math.ceil(0.1*len(c["comments"])))
+        dummy_question_ids = random.sample(range(1, len(c["comments"]) + num_of_dummy_questions + 1), num_of_dummy_questions)
+        dummy_question_ref = random.sample(range(1, len(DUMMY_QUESTIONS)), num_of_dummy_questions)
+        id_to_question = {}
+        for d in range(0, len(dummy_question_ids)):
+            id_to_question[str(dummy_question_ids[d])] = dummy_question_ref[d]
+
+        reviewPolicy = {
+            "PolicyName": "ScoreMyKnownAnswers/2011-09-01",
+            "Parameters": [
+                {"Key": "ApproveIfKnownAnswerScoreIsAtLeast", "Values": [str(num_of_dummy_questions)]},
+                {"Key": "RejectIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
+                {"Key": "ExtendIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
+                {"Key": "RejectReason", "Values": [REJECT_MESSAGE]},
+                {"Key": "AnswerKey", "MapEntries": [{"Key": "Question" + str(i), "Values": [DUMMY_QUESTIONS[id_to_question[str(i)]]["answer"]]} for i in dummy_question_ids]}
+            ]
+        }
+
+        dummies_issued = 0
+        for i in range(0, len(c["comments"]) + num_of_dummy_questions):
+            if i+1 in dummy_question_ids:
+                dummy_question = DUMMY_QUESTIONS[id_to_question[str(i+1)]]["question"]
+                qfroot = add_comment(dummy_question, "Question"+str(i+1))
+                qroot.append(qfroot)
+                dummies_issued = dummies_issued + 1
+            else:
+                qfroot = add_comment(c["comments"][i - dummies_issued], "Question"+str(i+1))
+                qroot.append(qfroot)
+
+        question_form = ET.tostring(qroot, encoding='utf-8', method='xml')
+
+        mtc.create_hit(Question=question_form,
+                       MaxAssignments=1,
+                       Title=TITLE,
+                       Description=DESCRIPTION,
+                       Keywords=KEYWORDS,
+                       AssignmentDurationInSeconds=90*(len(c["comments"])),
+                       LifetimeInSeconds=SECONDS_TO_EXPIRE,
+                       AssignmentReviewPolicy=reviewPolicy,
+                       Reward="1")
+
+if __name__ == '__main__':
+    generateHitRequest()
