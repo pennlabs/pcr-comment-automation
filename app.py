@@ -3,6 +3,7 @@ import boto3
 import datetime
 import math
 import random
+from itertools import permutations
 
 ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
 SECRET_KEY = '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'
@@ -28,6 +29,29 @@ REJECT_MESSAGE = "You failed to provide a correct response to one or more questi
 
 courses = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}, {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
 
+# Swaps pairs of characters given a list of strings; designed to create a list of common potential typos
+def swap_chars(string_list):
+    corrections = set()
+    for str in string_list:
+        for i in range(len(str) - 1):
+            rest = None
+            if i < len(str) - 1:
+                rest = str[(i+2):]
+            else: rest = ""
+            potentialWord = str[0:i] + str[i + 1] + str[i] + rest
+            corrections.add(potentialWord)
+    return list(corrections)
+
+def permute_chars(string_list):
+    corrections = set()
+    for str in string_list:
+        for i in range(len(str) - 1):
+            for x in range(97, 123):
+                new_str = str[0:i] + chr(x) + str[(i+1):]
+                corrections.add(new_str)
+            sub_str = str[0:i] + str[(i+1):]
+            corrections.add(sub_str)
+    return list(corrections)
 
 overview = "<Overview>"
 overview = overview + '<Title>Censor vulgar, overly harsh, irrelevant, or unconstructive college course comments.</Title>'
@@ -37,7 +61,7 @@ overview = overview + "</Overview>"
 
 def add_comment(text, id, question_form):
     qc1 = "<Question><QuestionIdentifier>" + id + "</QuestionIdentifier>"
-    qc1 = qc1 + "<DisplayName>" + "Question1" + "</DisplayName>" 
+    qc1 = qc1 + "<DisplayName>" + "Question1" + "</DisplayName>"
     qc1 = qc1 + "<IsRequired>true</IsRequired>"
     qc1 = qc1 + "<QuestionContent><Text>" + text  + "</Text></QuestionContent>"
     qc1 = qc1 + "<AnswerSpecification>"
@@ -53,6 +77,7 @@ def filter_comment(comment, professors, course):
     to_filter = WORDS_TO_FILTER
     for c in course.split(" "):
         to_filter.append(c)
+    to_filter = permute_strings(to_filter)
     for w in to_filter:
         ignore_case = re.compile(re.escape(w), re.IGNORECASE)
         comment = ignore_case.sub("".join(['X' for c in w]), comment)
@@ -70,7 +95,7 @@ for c in courses:
     id_to_question = {}
     for d in range(0, len(dummy_question_ids)):
         id_to_question[str(dummy_question_ids[d])] = dummy_question_ref[d]
-    
+
     reviewPolicy = {
         "PolicyName": "ScoreMyKnownAnswers/2011-09-01",
         "Parameters": [
@@ -81,7 +106,7 @@ for c in courses:
             {"Key": "AnswerKey", "MapEntries": [{"Key": "Question" + str(i), "Values": [DUMMY_QUESTIONS[id_to_question[str(i)]]["answer"]]} for i in dummy_question_ids]}
         ]
     }
- 
+
     question_form = "<QuestionForm xmlns='" + XML_TEMPLATE  + "'>" + overview
     dummies_issued = 0
     for i in range(0, len(c["comments"]) + num_of_dummy_questions):
@@ -91,7 +116,7 @@ for c in courses:
             dummies_issued = dummies_issued + 1
         else:
             question_form = add_comment(filter_comment(c["comments"][i - dummies_issued], c['instructors'], c['course']), "Question"+str(i+1), question_form)
-    
+
     question_form = question_form + "</QuestionForm>"
     mtc.create_hit(Question=question_form,
                    MaxAssignments=1,
