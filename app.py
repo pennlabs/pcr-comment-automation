@@ -31,7 +31,6 @@ REJECT_MESSAGE = "You failed to provide a correct response to one or more questi
 courses = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
             {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
 
-
 def add_comment(text, qid):
 
     tree = ET.parse('comment.xml')
@@ -62,7 +61,13 @@ def filter_comment(comment, professors, course):
             comment = ignore_case.sub("".join(['X' for c in name]), comment)
     return comment
 
+def remove_vulgar_comments(comment):
+    swearwords = [{ "arse", "ass", "asshole", "bastard", "bitch", "bollocks", "child-fucker", "crap", "cunt",
+                    "damn", "damm", "fuck", "fucker", "fucking", "godamm", "goddam", "goddamm", "godamn", "goddamn",
+                    "hell", "motherfucker", "nigga", "nigger", "shit", "shitass", "twat"}]
+
 def generateHitRequest():
+    filter_comment(c["comments"], c['instructors'], c['course'])
 
     for c in courses:
         qtree = ET.parse('questionform.xml')
@@ -72,7 +77,7 @@ def generateHitRequest():
         ovTree = ET.parse('overview.xml')
         ovRoot = ovTree.getroot()
         qroot.append(ovRoot);
-        
+
         num_of_dummy_questions = int(math.ceil(0.1*len(c["comments"])))
         dummy_question_ids = random.sample(range(1, len(c["comments"]) + num_of_dummy_questions + 1), num_of_dummy_questions)
         dummy_question_ref = random.sample(range(1, len(DUMMY_QUESTIONS)), num_of_dummy_questions)
@@ -99,8 +104,9 @@ def generateHitRequest():
                 qroot.append(qfroot)
                 dummies_issued = dummies_issued + 1
             else:
-                qfroot = add_comment(filter_comment(c["comments"][i - dummies_issued], c['instructors'], c['course']), "Question"+str(i+1))
+                qfroot = add_comment(c["comments"][i - dummies_issued], "Question"+str(i+1))
                 qroot.append(qfroot)
+
         question_form = ET.tostring(qroot, encoding='utf-8', method='xml')
 
         mtc.create_hit(Question=question_form,
