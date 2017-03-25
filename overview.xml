@@ -2,9 +2,9 @@
   <Title>Censor vulgar, overly harsh, irrelevant, or unconstructive college course comments.</Title>
   <Text>
     Here we are some examples of what we are looking for:
-    1. This professor was a jerk. F*** this class. -> Disapprove (Vulgar)
-    2. This was the worst class. -> Disapprove (Unconstructive)
-    3. This was an amazing class. -> Approve
-    4. I truly did not enjoy this class. The professor was too fast and the homework was unrelated to exams. XXXXXX is too hard and way too boring.I strongly advise against this class. -> Approve (strongly negative, but reserved)
+    1. This professor was a jerk. F*** this class. --- Disapprove (Vulgar)
+    2. This was the worst class. --- Disapprove (Unconstructive)
+    3. This was an amazing class. --- Approve
+    4. I truly did not enjoy this class. The professor was too fast and the homework was unrelated to exams. XXXXXX is too hard and way too boring. I strongly advise against this class. --- Approve (strongly negative, but reserved)
   </Text>
 </Overview>
