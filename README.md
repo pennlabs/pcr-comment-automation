@@ -1,7 +1,21 @@
 # PCR Comment Automation
 
 Using Amazon Mechanical Turk to review course comments. 
-To use, first run "pip install boto" then "python app.py"
+To use, run
+
+(not requried)
+pip install virtualenv
+virtualenv venv
+
+pip install -r requirements.txt
+pip install --upgrade --user awscli
+
+	AWS Access Key ID: (specified in app.py)
+	AWS Secret Access Key: (specified in app.py)
+	Default region name: us-east-1
+	Default output format: (skip!!!)
+
+python app.py
 
 
 ## TODO
