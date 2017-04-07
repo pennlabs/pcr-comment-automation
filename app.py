@@ -3,73 +3,71 @@ import boto3
 import datetime
 import math
 import random
-import json
-from data import *
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
+
+ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
+SECRET_KEY = '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'
+HOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 
 mtc = boto3.client("mturk", aws_access_key_id=ACCESS_ID,
                       aws_secret_access_key=SECRET_KEY,
                       endpoint_url=HOST)
+
+TITLE = 'Filter College Course Comments (WARNING: This HIT may contain adult content. Worker discretion is advised.)'
+DESCRIPTION = ('Disapprove comments if they contain inappropriate content. Otherwise, approve them.')
+KEYWORDS = 'censor, comments, filter'
+SECONDS_TO_EXPIRE = 60*5
+
+XML_TEMPLATE = "http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd"
+
+# TODO: Refactor into data files
+WORDS_TO_FILTER = ["pennsylvania", "penn", "philadelphia", "philly", "M&T", "LSM", "MLS", "Franklin", "Moore", "Towne", "Hunstsman", "Levine"] #need to add more and filter out all building names
+
+DUMMY_QUESTIONS = [{"question": "dummy-approve", "answer": "approve"}, {"question": "dummy-reject", "answer": "disapprove"}, {"question": "dummy-approve", "answer": "approve" }]
+
+REJECT_MESSAGE = "You failed to provide a correct response to one or more questions. Sorry for the inconvenience. We hope to work with you again in the future."
+
+courses = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
+            {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
+
 
 def add_comment(text, qid):
 
     tree = ET.parse('comment.xml')
 
     qID = tree.find('QuestionIdentifier')
-    dispName = tree.find('DisplayName')
-    txt = tree.find('QuestionContent')
-
     qID.text = qid
+
+    dispName = tree.find('DisplayName')
     dispName.text = qid
+
+    txt = tree.find('QuestionContent')
     txt[0].text = text
 
     root = tree.getroot()
     return root
 
-
-def filter_comment(course):
-
-    for c in course:
-        filtered_c = remove_vulgar_comments(c['comments'])
-
-#     comment = remove_vulgar_comments(prefiltered)
-#     to_filter = WORDS_TO_FILTER
-#
-#     for c in course.split():
-#         to_filter.append(c)
-#     for w in to_filter:
-#         ignore_case = re.compile(re.escape(w), re.IGNORECASE)
-#         comment = ignore_case.sub("".join(['X' for c in w]), comment)
-#     for i in range(0, len(professors)):
-#         professors[i] = professors[i].replace(',', '')
-#         for name in professors[i].split(' '):
-#             ignore_case = re.compile(re.escape(name), re.IGNORECASE)
-#             comment = ignore_case.sub("".join(['X' for c in name]), comment)
-#     return comment
+def filter_comment(comment, professors, course):
+    to_filter = WORDS_TO_FILTER
+    for c in course.split(" "):
+        to_filter.append(c)
+    for w in to_filter:
+        ignore_case = re.compile(re.escape(w), re.IGNORECASE)
+        comment = ignore_case.sub("".join(['X' for c in w]), comment)
+    for i in range(0, len(professors)):
+        professors[i] = professors[i].replace(',', '')
+        for name in professors[i].split(' '):
+            ignore_case = re.compile(re.escape(name), re.IGNORECASE)
+            comment = ignore_case.sub("".join(['X' for c in name]), comment)
+    return comment
 
 def remove_vulgar_comments(comment):
-
     swearwords = [ "arse", "ass", "asshole", "bastard", "bitch", "bollocks", "child-fucker", "crap", "cunt",
                     "damn", "damm", "fuck", "fucker", "fucking", "godamm", "goddam", "goddamm", "godamn", "goddamn",
                     "hell", "motherfucker", "nigga", "nigger", "shit", "shitass", "twat"]
-    for string in comment:
-        for word in swearwords:
-            if word in string:
-                print "no"
-                print word
 
 def generateHitRequest():
-
-    css = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I fuck this" class so > much. fuck and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
-                    {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
-
-    filter_comment(css)
-
-    with open('strings.json') as json_data:
-        d = json.load(json_data)
-        print(d)
-
     filter_comment(c["comments"], c['instructors'], c['course'])
 
     for c in courses:

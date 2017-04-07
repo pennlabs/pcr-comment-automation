@@ -1,14 +1,14 @@
 # PCR Comment Automation
 
-Using Amazon Mechanical Turk to review course comments._
-To use, run_
+Using Amazon Mechanical Turk to review course comments. 
+To use, run
 
-(not requried)_
-pip install virtualenv_
-virtualenv venv_
+(not requried)
+pip install virtualenv
+virtualenv venv
 
-pip install -r requirements.txt_
-pip install --upgrade --user awscli_
+pip install -r requirements.txt
+pip install --upgrade --user awscli
 
 	AWS Access Key ID: (specified in app.py)
 	AWS Secret Access Key: (specified in app.py)
@@ -32,3 +32,4 @@ python app.py
 10. Create a few more stupid dummy questions (during testing)
 11. Replace stupid dummy questions with many smart dummy questions (after testing)
 12. Clean up worker-view instructions
+
