@@ -8,6 +8,8 @@ from data import *
 from nltk.tokenize import word_tokenize
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
+import numpy as np
+from itertools import compress  
 
 mtc = boto3.client("mturk", aws_access_key_id=ACCESS_ID,
                       aws_secret_access_key=SECRET_KEY,
@@ -34,31 +36,34 @@ def tokenize(comment):
     count = 0
 
     for c in comment:
+        c = c.lower();
         tokenizedComments.append(word_tokenize(c));
 
     return tokenizedComments
 
 # MAIN FILTER FUNCTION
 def filter_comment(course):
+
     for c in course:
-        filtered_c = remove_vulgar_comments(c['comments'])
+        c['comments'] = remove_vulgar_comments(c['comments'])
+
+    return course
 
 # Fitler Step 1
 def remove_vulgar_comments(comment):
 
     tokenizedComments = tokenize(comment)
-    toRemove = []
+    toKeep = np.full( len(comment), True)
     count = 0
 
-    # for c in tokenizedComments:
-    #     for word in swearwords:
-    #         if word in c:
-    #             print c
-    #             print 'no'
-    #             print word
-    #             print count
-    #             toRemove[count] = True
-    #     count = count + 1
+    for c in tokenizedComments:
+        for word in swearwords:
+            if word in c:
+                toKeep[count]= False
+        count = count + 1;
+
+    comment = list(compress(comment, toKeep))
+    return comment
 
 # Swaps pairs of characters given a list of strings; designed to create a list of common potential typos
 def swap_chars(string_list):
@@ -86,10 +91,8 @@ def permute_chars(string_list):
 
 def generateHitRequest():
 
-    css = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I fuck this" class so > much. fuck and Arvind asshole were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
-                    {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown  bitch and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
-
-    filter_comment(css)
+    filtered = filter_comment(courses)
+    print filtered
 
     # with open('strings.json') as json_data:
     #     d = json.load(json_data)
@@ -147,7 +150,6 @@ def generateHitRequest():
 
 if __name__ == '__main__':
     generateHitRequest()
-
 
 #     comment = remove_vulgar_comments(prefiltered)
 #     to_filter = WORDS_TO_FILTER
