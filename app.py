@@ -5,6 +5,7 @@ import math
 import random
 import json
 from data import *
+from nltk.tokenize import word_tokenize
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 
@@ -27,50 +28,73 @@ def add_comment(text, qid):
     root = tree.getroot()
     return root
 
+# Helper function used frequently
+def tokenize(comment):
+    tokenizedComments = []
+    count = 0
 
+    for c in comment:
+        tokenizedComments.append(word_tokenize(c));
+
+    return tokenizedComments
+
+# MAIN FILTER FUNCTION
 def filter_comment(course):
-
     for c in course:
         filtered_c = remove_vulgar_comments(c['comments'])
 
-#     comment = remove_vulgar_comments(prefiltered)
-#     to_filter = WORDS_TO_FILTER
-#
-#     for c in course.split():
-#         to_filter.append(c)
-#     for w in to_filter:
-#         ignore_case = re.compile(re.escape(w), re.IGNORECASE)
-#         comment = ignore_case.sub("".join(['X' for c in w]), comment)
-#     for i in range(0, len(professors)):
-#         professors[i] = professors[i].replace(',', '')
-#         for name in professors[i].split(' '):
-#             ignore_case = re.compile(re.escape(name), re.IGNORECASE)
-#             comment = ignore_case.sub("".join(['X' for c in name]), comment)
-#     return comment
-
+# Fitler Step 1
 def remove_vulgar_comments(comment):
 
-    swearwords = [ "arse", "ass", "asshole", "bastard", "bitch", "bollocks", "child-fucker", "crap", "cunt",
-                    "damn", "damm", "fuck", "fucker", "fucking", "godamm", "goddam", "goddamm", "godamn", "goddamn",
-                    "hell", "motherfucker", "nigga", "nigger", "shit", "shitass", "twat"]
-    for string in comment:
-        for word in swearwords:
-            if word in string:
-                print "no"
-                print word
+    tokenizedComments = tokenize(comment)
+    toRemove = []
+    count = 0
+
+    # for c in tokenizedComments:
+    #     for word in swearwords:
+    #         if word in c:
+    #             print c
+    #             print 'no'
+    #             print word
+    #             print count
+    #             toRemove[count] = True
+    #     count = count + 1
+
+# Swaps pairs of characters given a list of strings; designed to create a list of common potential typos
+def swap_chars(string_list):
+    corrections = set()
+    for str in string_list:
+        for i in range(len(str) - 1):
+            rest = None
+            if i < len(str) - 1:
+                rest = str[(i+2):]
+            else: rest = ""
+            potentialWord = str[0:i] + str[i + 1] + str[i] + rest
+            corrections.add(potentialWord)
+    return list(corrections)
+
+def permute_chars(string_list):
+    corrections = set()
+    for str in string_list:
+        for i in range(len(str) - 1):
+            for x in range(97, 123):
+                new_str = str[0:i] + chr(x) + str[(i+1):]
+                corrections.add(new_str)
+            sub_str = str[0:i] + str[(i+1):]
+            corrections.add(sub_str)
+    return list(corrections)
+
 
 def generateHitRequest():
 
-    css = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I fuck this" class so > much. fuck and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
-                    {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
+    css = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I fuck this" class so > much. fuck and Arvind asshole were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
+                    {'course': 'CIS 120', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I hated this class so much. Brown  bitch and Arvind were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']}]
 
     filter_comment(css)
 
-    with open('strings.json') as json_data:
-        d = json.load(json_data)
-        print(d)
-
-    filter_comment(c["comments"], c['instructors'], c['course'])
+    # with open('strings.json') as json_data:
+    #     d = json.load(json_data)
+    #     print(d)
 
     for c in courses:
         qtree = ET.parse('questionform.xml')
@@ -124,3 +148,19 @@ def generateHitRequest():
 
 if __name__ == '__main__':
     generateHitRequest()
+
+
+#     comment = remove_vulgar_comments(prefiltered)
+#     to_filter = WORDS_TO_FILTER
+#
+#     for c in course.split():
+#         to_filter.append(c)
+#     for w in to_filter:
+#         ignore_case = re.compile(re.escape(w), re.IGNORECASE)
+#         comment = ignore_case.sub("".join(['X' for c in w]), comment)
+#     for i in range(0, len(professors)):
+#         professors[i] = professors[i].replace(',', '')
+#         for name in professors[i].split(' '):
+#             ignore_case = re.compile(re.escape(name), re.IGNORECASE)
+#             comment = ignore_case.sub("".join(['X' for c in name]), comment)
+#     return comment
