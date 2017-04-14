@@ -84,7 +84,6 @@ def permute_chars(string_list):
             corrections.add(sub_str)
     return list(corrections)
 
-
 def generateHitRequest():
 
     css = [{'course': 'CIS 110', 'instructors': ['Benedict Brown', 'Arvind Bhusnurmath'], 'comments': ['I fuck this" class so > much. fuck and Arvind asshole were the worst professors everat the UNIVERsity of PENNSYLVANIA. I dont like that we took field trips around philly either. As an M&T student this was a waste of my time. The end', 'I really wish the instruction was better. I do not like walking out to moore, just to be held captive by recitation for an hour. I wish I had dropped CIS110.']},
