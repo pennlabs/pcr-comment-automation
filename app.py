@@ -10,6 +10,8 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 import numpy as np
 from itertools import compress  
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 mtc = boto3.client("mturk", aws_access_key_id=ACCESS_ID,
                       aws_secret_access_key=SECRET_KEY,
@@ -32,6 +34,7 @@ def add_comment(text, qid):
 
 # Helper function used frequently
 def tokenize(comment):
+
     tokenizedComments = []
     count = 0
 
@@ -41,13 +44,15 @@ def tokenize(comment):
 
     return tokenizedComments
 
+
 # MAIN FILTER FUNCTION
 def filter_comment(course):
 
     for c in course:
         c['comments'] = remove_vulgar_comments(c['comments'])
 
-    return course
+    filtered_data = fuzzFilter(course)
+    return filtered_data
 
 # Fitler Step 1
 def remove_vulgar_comments(comment):
@@ -65,40 +70,38 @@ def remove_vulgar_comments(comment):
     comment = list(compress(comment, toKeep))
     return comment
 
-# Swaps pairs of characters given a list of strings; designed to create a list of common potential typos
-def swap_chars(string_list):
-    corrections = set()
-    for str in string_list:
-        for i in range(len(str) - 1):
-            rest = None
-            if i < len(str) - 1:
-                rest = str[(i+2):]
-            else: rest = ""
-            potentialWord = str[0:i] + str[i + 1] + str[i] + rest
-            corrections.add(potentialWord)
-    return list(corrections)
+# Filter Step 2
+def fuzzFilter(data):
+    
+    course_num = 0
 
-def permute_chars(string_list):
-    corrections = set()
-    for str in string_list:
-        for i in range(len(str) - 1):
-            for x in range(97, 123):
-                new_str = str[0:i] + chr(x) + str[(i+1):]
-                corrections.add(new_str)
-            sub_str = str[0:i] + str[(i+1):]
-            corrections.add(sub_str)
-    return list(corrections)
+    # For each course
+    while course_num < len(data):
+        comment_num = 0
+        comment_list = data[course_num]["comments"]
+        # For each comment in each course
+        while comment_num < len(comment_list):
+            tok_index = 0
+            tokens = tokenize(comment_list)
+            currTokSet = tokens[comment_num]
+            # Iterate over each tokenized word in comment
+            for word in currTokSet:
+                for keyword in WORDS_TO_FILTER:
+                    #filter based on Levenshtein Distance 
+                    if fuzz.ratio(word, keyword) >= 90:
+                        currTokSet[tok_index] = "*****"
+                tok_index = tok_index + 1
+            newComment = ' '.join(currTokSet)
+            data[course_num]["comments"][comment_num] = newComment
+            comment_num = comment_num + 1
+        course_num = course_num + 1
+        return data
 
 def generateHitRequest():
 
     filtered = filter_comment(courses)
-    print filtered
 
-    # with open('strings.json') as json_data:
-    #     d = json.load(json_data)
-    #     print(d)
-
-    for c in courses:
+    for c in filtered:
         qtree = ET.parse('questionform.xml')
         qroot = qtree.getroot()
         qroot.set('xmlns', XML_TEMPLATE)
@@ -151,17 +154,3 @@ def generateHitRequest():
 if __name__ == '__main__':
     generateHitRequest()
 
-#     comment = remove_vulgar_comments(prefiltered)
-#     to_filter = WORDS_TO_FILTER
-#
-#     for c in course.split():
-#         to_filter.append(c)
-#     for w in to_filter:
-#         ignore_case = re.compile(re.escape(w), re.IGNORECASE)
-#         comment = ignore_case.sub("".join(['X' for c in w]), comment)
-#     for i in range(0, len(professors)):
-#         professors[i] = professors[i].replace(',', '')
-#         for name in professors[i].split(' '):
-#             ignore_case = re.compile(re.escape(name), re.IGNORECASE)
-#             comment = ignore_case.sub("".join(['X' for c in name]), comment)
-#     return comment
