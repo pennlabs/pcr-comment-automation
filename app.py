@@ -1,10 +1,13 @@
-import re
-import boto3
-import datetime
-import math
 import random
+import json
+from data import *
+from tokenizer import *
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
+import numpy as np
+from itertools import compress
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
 SECRET_KEY = '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'
@@ -48,29 +51,34 @@ def add_comment(text, qid):
     root = tree.getroot()
     return root
 
+# Top-level filter function: filters out vulgar comments and censors keywords.
 def filter_comment(comment, professors, course):
-    to_filter = WORDS_TO_FILTER
-    for c in course.split(" "):
-        to_filter.append(c)
-    for w in to_filter:
-        ignore_case = re.compile(re.escape(w), re.IGNORECASE)
-        comment = ignore_case.sub("".join(['X' for c in w]), comment)
-    for i in range(0, len(professors)):
-        professors[i] = professors[i].replace(',', '')
-        for name in professors[i].split(' '):
-            ignore_case = re.compile(re.escape(name), re.IGNORECASE)
-            comment = ignore_case.sub("".join(['X' for c in name]), comment)
-    return comment
+    # Filter Step 1
+    for c in course:
+        c['comments'] = remove_vulgar_comments(c['comments'])
+    # Filter Step 2
+    filtered_data = fuzzFilter(course)
+    return filtered_data
 
 def remove_vulgar_comments(comment):
-    swearwords = [ "arse", "ass", "asshole", "bastard", "bitch", "bollocks", "child-fucker", "crap", "cunt",
-                    "damn", "damm", "fuck", "fucker", "fucking", "godamm", "goddam", "goddamm", "godamn", "goddamn",
-                    "hell", "motherfucker", "nigga", "nigger", "shit", "shitass", "twat"]
+    tokenizedComments = tokenizeSwearWords(comment)
+    toKeep = np.full(len(comment), True)
+    count = 0
+    # Keep a list of "flags" that indicate whether a comment contains a vulgar word.
+    for c in tokenizedComments:
+        for word in swearwords:
+            if word in c:
+                toKeep[count] = False
+                count = count + 1
+    # Remove comments from the original data depending on whether the comment was flagged.
+    comment = list(compress(comment, toKeep))
+    return comment
 
 def generateHitRequest():
-    filter_comment(c["comments"], c['instructors'], c['course'])
+    # filter_comment(c["comments"], c['instructors'], c['course'])
 
     for c in courses:
+        print(ET.parse('questionform.xml'))
         qtree = ET.parse('questionform.xml')
         qroot = qtree.getroot()
         qroot.set('xmlns', XML_TEMPLATE)
@@ -110,7 +118,11 @@ def generateHitRequest():
 
         question_form = ET.tostring(qroot, encoding='utf-8', method='xml')
 
-        mtc.create_hit(Question=question_form,
+        ptree = ET.parse('reward.xml')
+        proot = ptree.getroot()
+        reward_form = ET.tostring(proot, encoding='utf-8', method='xml')
+
+        mtc.create_hit(Question=question_form.decode(),
                        MaxAssignments=1,
                        Title=TITLE,
                        Description=DESCRIPTION,
@@ -118,7 +130,8 @@ def generateHitRequest():
                        AssignmentDurationInSeconds=90*(len(c["comments"])),
                        LifetimeInSeconds=SECONDS_TO_EXPIRE,
                        AssignmentReviewPolicy=reviewPolicy,
-                       Reward="1")
+                       Reward="0.2",
+                       )
 
 if __name__ == '__main__':
     generateHitRequest()
