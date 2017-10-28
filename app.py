@@ -74,11 +74,69 @@ def remove_vulgar_comments(comment):
     comment = list(compress(comment, toKeep))
     return comment
 
-def generateHitRequest():
-    # filter_comment(c["comments"], c['instructors'], c['course'])
+def tokenizeSwearWords(comment):
+    tokenizedComments = []
+    count = 0
+    for c in comment:
+        c = c.lower();
+        tokenizedComments.append(tokenize(c));
+    return tokenizedComments
 
-    for c in courses:
-        print(ET.parse('questionform.xml'))
+# Filter Step 2: censors words based on keywords found using a maximum Levinshtein distance.
+ def fuzzFilter(data):
+     course_num = 0
+
+     # For each course...
+     while course_num < len(data):
+         comment_num = 0
+         comment_list = data[course_num]["comments"]
+         # For each comment in each course...
+         while comment_num < len(comment_list):
+             tok_index = 0
+             # Tokenize the current comment using the tokenizer.
+             curr_tok_set = tokenize(comment_list[comment_num])
+
+             # Iterate over each tokenized word in comment.
+             for word in currTokSet:
+                 for keyword in WORDS_TO_FILTER:
+                     # Make words case-insensitive for comparison purposes
+                     lcword = word.lower()
+                     lckeyword = keyword.lower()
+
+                     # Filter based on Levenshtein Distance. The fuzz library
+                     # returns a "fuzz ratio" that is between 0 and 100, with 100
+                     # being an identical match to the word being compared.
+                     if fuzz.ratio(lcword, lckeyword) >= 90:
+                         curr_tok_set[tok_index] = "*****"
+                 tok_index = tok_index + 1
+
+             # Reparse the tokens into one string.
+             newComment = ''.join(curr_tok_set)
+
+             # Replace the old comment in the raw data with the censored comment.
+             data[course_num]["comments"][comment_num] = newComment
+
+             comment_num = comment_num + 1
+         course_num = course_num + 1
+     return data
+
+ # Adds instructors and course names to the list of words to filter.
+ def addNamesToWordsToFilter(data):
+     for course in data:
+         for prof in course["instructors"]:
+             # Tokenize first and last names of instructors. Important since most
+             # comments don't use the instructor's full name.
+             for name in prof.split():
+                 WORDS_TO_FILTER.append(name)
+         WORDS_TO_FILTER.append(course["course"])
+
+# Connects with MT and uploads a HIT request.
+def generateHitRequest():
+    # Build filter list and filter comments.
+    addNamesToWordsToFilter(courses)
+    filtered = filter_comment(courses)
+
+    for c in filtered:
         qtree = ET.parse('questionform.xml')
         qroot = qtree.getroot()
         qroot.set('xmlns', XML_TEMPLATE)
@@ -87,8 +145,9 @@ def generateHitRequest():
         ovRoot = ovTree.getroot()
         qroot.append(ovRoot);
 
-        num_of_dummy_questions = int(math.ceil(0.1*len(c["comments"])))
-        dummy_question_ids = random.sample(range(1, len(c["comments"]) + num_of_dummy_questions + 1), num_of_dummy_questions)
+        num_of_dummy_questions = int(math.ceil(0.1 * len(c["comments"])))
+        dummy_question_ids = random.sample(range(1, len(c["comments"]) + num_of_dummy_questions + 1),
+                                           num_of_dummy_questions)
         dummy_question_ref = random.sample(range(1, len(DUMMY_QUESTIONS)), num_of_dummy_questions)
         id_to_question = {}
         for d in range(0, len(dummy_question_ids)):
@@ -101,7 +160,9 @@ def generateHitRequest():
                 {"Key": "RejectIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
                 {"Key": "ExtendIfKnownAnswerScoreIsLessThan", "Values": [str(num_of_dummy_questions)]},
                 {"Key": "RejectReason", "Values": [REJECT_MESSAGE]},
-                {"Key": "AnswerKey", "MapEntries": [{"Key": "Question" + str(i), "Values": [DUMMY_QUESTIONS[id_to_question[str(i)]]["answer"]]} for i in dummy_question_ids]}
+                {"Key": "AnswerKey", "MapEntries": [
+                    {"Key": "Question" + str(i), "Values": [DUMMY_QUESTIONS[id_to_question[str(i)]]["answer"]]} for i in
+                    dummy_question_ids]}
             ]
         }
 
@@ -116,7 +177,7 @@ def generateHitRequest():
                 qfroot = add_comment(c["comments"][i - dummies_issued], "Question"+str(i+1))
                 qroot.append(qfroot)
 
-        question_form = ET.tostring(qroot, encoding='utf-8', method='xml')
+        question_form = ET.tostring(qroot, encoding='utf-8', method='xml').decode("utf-8")
 
         ptree = ET.parse('reward.xml')
         proot = ptree.getroot()
@@ -127,11 +188,17 @@ def generateHitRequest():
                        Title=TITLE,
                        Description=DESCRIPTION,
                        Keywords=KEYWORDS,
-                       AssignmentDurationInSeconds=90*(len(c["comments"])),
+                       AssignmentDurationInSeconds=30*(len(c["comments"])),
                        LifetimeInSeconds=SECONDS_TO_EXPIRE,
                        AssignmentReviewPolicy=reviewPolicy,
                        Reward="0.2",
                        )
 
+      # Uncomment the following lines to test filter results on the command linewithout making a HIT request.
+      # addNamesToWordsToFilter(courses)
+      # filtered = filter_comment(courses)
+      # print(filtered)
+
+# Calls on the HIT request.
 if __name__ == '__main__':
     generateHitRequest()
