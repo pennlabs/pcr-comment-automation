@@ -1,8 +1,14 @@
 HOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
 
+ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
+SECRET_KEY = ''
+
 TITLE = 'Filter College Course Comments (WARNING: This HIT may contain adult content. Worker discretion is advised.)'
 DESCRIPTION = ('Disapprove comments if they contain inappropriate content. Otherwise, approve them.')
 REJECT_MESSAGE = "You failed to provide a correct response to one or more questions. Sorry for the inconvenience. We hope to work with you again in the future."
+
+KEYWORDS = 'censor, comments, filter'
+
 
 XML_TEMPLATE = "http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd"
 

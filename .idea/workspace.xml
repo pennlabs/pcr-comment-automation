@@ -1,82 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/app.py" line="53" />
+    <bookmark url="file://$PROJECT_DIR$/app.py" line="46" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ba175a0-ac88-4e5e-b14f-55f3897c8cd9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/activate" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/activate.csh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/activate.fish" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/activate_this.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/asadmin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/aws" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/aws.cmd" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/aws_bash_completer" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/aws_completer" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/aws_zsh_completer.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/bundle_image" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/cfadmin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/cq" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/cwutil" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/dynamodb_dump" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/dynamodb_load" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/easy_install" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/easy_install-3.6" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/elbadmin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/f2py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/fetch_file" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/glacier" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/instance_events" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/iptest" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/iptest3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/ipython" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/ipython3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/jp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/jp.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/kill_instance" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/launch_instance" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/list_instances" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/lss3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/mturk" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pip" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pip3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pip3.6" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyami_sendmail" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pygmentize" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-decrypt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-decrypt-bigfile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-encrypt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-encrypt-bigfile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-keygen" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-priv2pub" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-sign" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/pyrsa-verify" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/python" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/python-config" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/python3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/python3.6" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/route53" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2html.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2html5.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2latex.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2man.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2odt.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2odt_prepstyles.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2pseudoxml.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2s5.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2xetex.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rst2xml.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/rstpep2html.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/s3put" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/sdbadmin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/taskadmin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/bin/wheel" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/include/python3.6m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/pip-selfcheck.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/envname/share/man/man1/ipython.1.gz" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data.py" afterPath="$PROJECT_DIR$/data.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -87,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="app.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="189" column="45" lean-forward="false" selection-start-line="189" selection-start-column="45" selection-end-line="189" selection-end-column="45" />
+            <state relative-caret-position="210">
+              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -102,8 +33,8 @@
       <file leaf-file-name="data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="135">
+              <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -139,11 +70,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="11" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+            <state relative-caret-position="60">
+              <caret line="4" column="13" lean-forward="true" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -208,12 +139,12 @@
       <list>
         <option value="$PROJECT_DIR$/price.xml" />
         <option value="$PROJECT_DIR$/reward.xml" />
-        <option value="$PROJECT_DIR$/data.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/envname/tokenizer.py" />
         <option value="$PROJECT_DIR$/tokenizer.py" />
         <option value="$PROJECT_DIR$/venv/lib/python3.6/site-packages/pygments/formatters/latex.py" />
         <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/data.py" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -300,7 +231,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -684,22 +614,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/comment.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tokenizer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -724,21 +638,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.py">
+    <entry file="file://$PROJECT_DIR$/comment.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="189" column="45" lean-forward="false" selection-start-line="189" selection-start-column="45" selection-end-line="189" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="450">
+          <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="11" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="60">
+          <caret line="4" column="13" lean-forward="true" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -1,19 +1,23 @@
 # PCR Comment Automation
 
 Using Amazon Mechanical Turk to review course comments. 
-To use, run
 
-(not requried)
+## Getting Started
+Start by running:
+
 pip install virtualenv
 virtualenv venv
+source venv/bin/activate
 
 pip install -r requirements.txt
 pip install --upgrade --user awscli
 
+Set ENV variables:
 	AWS Access Key ID: (specified in app.py)
-	AWS Secret Access Key: (specified in app.py)
+	AWS Secret Access Key: (add in app.py)
 	Default region name: us-east-1
 	Default output format: (skip!!!)
+
 
 python app.py
 

@@ -13,17 +13,10 @@ from itertools import compress
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
-ACCESS_ID = 'AKIAJTE3KKPD7JCT4UEQ'
-SECRET_KEY = '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'
-HOST = 'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
-
 mtc = boto3.client("mturk", aws_access_key_id=ACCESS_ID,
                       aws_secret_access_key=SECRET_KEY,
                       endpoint_url=HOST)
 
-TITLE = 'Filter College Course Comments (WARNING: This HIT may contain adult content. Worker discretion is advised.)'
-DESCRIPTION = ('Disapprove comments if they contain inappropriate content. Otherwise, approve them.')
-KEYWORDS = 'censor, comments, filter'
 SECONDS_TO_EXPIRE = 60*5
 
 XML_TEMPLATE = "http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd"
